@@ -95,10 +95,8 @@ interface ApiDataSchema {
 }
 
 const retrieveApiData = async (bookId: string): Promise<ApiDataSchema> => {
-    const [bookContent, bookMetadata] = await Promise.all([
-        fetchBookContentFromAPI(bookId),
-        fetchBookMetadataFromAPI(bookId)
-    ]);
+    const bookMetadata = await fetchBookMetadataFromAPI(bookId);
+    const bookContent = await fetchBookContentFromAPI(bookId);
 
     return {
         metadataData: bookMetadata,
