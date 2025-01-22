@@ -1,5 +1,5 @@
 const generateUUID = (): string => {  
-    const user_uuid = 'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, (c) => {  
+    const user_uuid = 'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, () => {  
         const r = Math.floor(Math.random() * 16);  
         return r.toString(16);  
     });

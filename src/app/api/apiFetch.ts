@@ -1,11 +1,12 @@
-import { FetchResult, useFetch } from "@/hooks/useFetch";
+import { retryFetch } from "@/utils/retryFetch";
 import { BookContent, BookMetadata } from "@/types/book";
-import { ModelConfig, SentimentScore } from "@/types/groq";
+import { SentimentScore } from "@/types/groq";
 import { cleanBookContent, cleanSummary, cleanTitle } from "@/utils/textParser";
 import { getContentUrl, getAlternativeContent, getMetadataUrl } from "@/utils/url";
 import * as cheerio from 'cheerio';
 import { AvailableModels, promptTemplate, userTemplate } from "../constants/const";
 import Groq from "groq-sdk";
+import { FetchResult } from "@/types/api";
 
 const parseBookContent = (content: string, bookId: string, urlUsed: string): BookContent => {
     const cleanedContent = cleanBookContent(content);
@@ -19,7 +20,7 @@ const parseBookContent = (content: string, bookId: string, urlUsed: string): Boo
 
 const fetchBookContent = async (bookId: string): Promise<FetchResult> => {
     const contentUrl = getContentUrl(bookId);
-    const response = await useFetch(
+    const response = await retryFetch(
         () => fetch(contentUrl, {
             headers: {
                 'User-Agent': 'connornusser@gmail.com'
@@ -27,7 +28,7 @@ const fetchBookContent = async (bookId: string): Promise<FetchResult> => {
         })
     );
     if(response.error){
-        const alternativeResp =  await useFetch(() => fetch(getAlternativeContent(bookId)));
+        const alternativeResp =  await retryFetch(() => fetch(getAlternativeContent(bookId)));
         return alternativeResp;
     }
     return response;
@@ -61,7 +62,7 @@ const parseBookMetadata = (html: string, bookId: string): BookMetadata => {
 
 const fetchBookMetadata = async (bookId: string): Promise<FetchResult> => {
     const contentUrl = getMetadataUrl(bookId);
-    const response = await useFetch(() => 
+    const response = await retryFetch(() => 
         fetch(contentUrl, {
             headers: {
                 'User-Agent': 'connornusser@gmail.com'
@@ -151,7 +152,7 @@ const analyzeSentiment = async (content: string): Promise<SentimentScore> => {
 
     await Promise.all(modelPromises);
 
-    let aggregatedScores: SentimentScore = {
+    const aggregatedScores: SentimentScore = {
         joy: 0,
         trust: 0,
         anticipation: 0,

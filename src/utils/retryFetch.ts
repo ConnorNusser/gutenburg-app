@@ -1,12 +1,9 @@
 'use server'
 
+import { FetchResult } from "@/types/api";
+
 // exists as kind of just a nice retry wrapper for any functions :) 
-export interface FetchResult {
-    response: Response;
-    error: string;
-}
-  
-export const useFetch = async (
+export const retryFetch = async (
     fetchFn: () => Promise<Response>,
     maxRetries: number = 3,
     delayMs: number = 1000

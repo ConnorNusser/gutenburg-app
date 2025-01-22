@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, Loader2 } from "lucide-react";
 import { useBookData, useRecentBooks } from '@/hooks/useBooks';
 import { useRouter } from 'next/navigation';
-import { getUserCredentials } from '@/utils/user_credentials';
+import { getUserCredentials } from '@/utils/userCredentials';
 
 const BookSearch = () => {
     const [bookId, setBookId] = useState('');

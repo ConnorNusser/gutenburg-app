@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { getMostRecentBooks } from '@/db/bookAccess';
 import { getBookMetadata, getBookMetadataBatch } from '@/db/bookMetadata';
 import { getBookContent } from '@/db/bookContent';
-import { getUserCredentials } from '@/utils/user_credentials';
+import { getUserCredentials } from '@/utils/userCredentials';
 
 const CACHE_DURATION = 1000 * 60 * 60;
 

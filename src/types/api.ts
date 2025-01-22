@@ -3,3 +3,8 @@ export interface ErrorResponse {
     statusCode: number;
     timestamp: Date;
 }
+
+export interface FetchResult {
+  response: Response;
+  error: string;
+}
