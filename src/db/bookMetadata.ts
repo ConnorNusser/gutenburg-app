@@ -44,7 +44,6 @@ const getBookMetadata = async (id: string, user_id: string): Promise<BookMetadat
     .single();
 
   if (error) {
-    console.error("Error fetching book metadata:", error);
     return null;
   }
 
