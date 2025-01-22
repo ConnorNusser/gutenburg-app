@@ -17,10 +17,10 @@ const getDominantEmotion = (scores: SentimentScore): string => {
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) {
     try {
-        const id = params.id;
+        const id = context.params.id;
         
         if (!/^\d+$/.test(id)) {
             const error: ErrorResponse = {

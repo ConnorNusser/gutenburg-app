@@ -9,11 +9,11 @@ import { fetchBookContent, parseBookContent } from '../../apiFetch';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) {
     try {
         const clientId = request.headers.get('x-client-id') ?? '';
-        const id = params.id;
+        const id = context.params.id;
         
         if (!/^\d+$/.test(id)) {
             const error: ErrorResponse = {
