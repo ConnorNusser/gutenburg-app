@@ -1,6 +1,6 @@
 import { BookMetadata } from "@/types/book";
 import supabaseClient from "./client";
-import { updateLastAccessed } from "./bookAccess";
+import { insertBook, updateLastAccessed } from "./bookAccess";
 import { DatabaseTableNames } from "@/app/constants/const";
 
 const insertBookMetadata = async (book: BookMetadata) => {
@@ -20,12 +20,23 @@ const insertBookMetadata = async (book: BookMetadata) => {
 
   if (upsertError) {
       console.error('Error upserting to Supabase:', upsertError);
-      throw upsertError;  // Added throw
+      throw upsertError;
+  }
+}
+
+const updateFetchedAt = async (id: string) => {
+  const timestamp = new Date().toISOString().replace('T', ' ').replace('Z', '');
+  const { error } = await supabaseClient
+    .from(DatabaseTableNames['BOOK_METADATA'])
+    .update({ fetched_at: timestamp })
+    .eq('id', id);
+    
+  if (error) {
+    console.error('Error updating fetched_at:', error);
   }
 }
 
 const getBookMetadata = async (id: string, user_id: string): Promise<BookMetadata | null> => {
-  updateLastAccessed(id, user_id);
   const { data, error } = await supabaseClient
     .from(DatabaseTableNames['BOOK_METADATA'])
     .select("*")
@@ -39,6 +50,11 @@ const getBookMetadata = async (id: string, user_id: string): Promise<BookMetadat
 
   if (!data) return null;
 
+  insertBook(id, user_id);
+  updateFetchedAt(id);
+
+  const currentTime = new Date().toISOString();
+  
   return {
     id: data.id,
     title: data.title,
@@ -46,15 +62,13 @@ const getBookMetadata = async (id: string, user_id: string): Promise<BookMetadat
     release_date: data.release_date,
     metadata_url: data.metadata_url,
     language: data.language,
-    fetched_at: data.fetched_at,
+    fetched_at: currentTime,
     interaction_count: data.interaction_count,
     summary: data.summary,
   };
 };
 
-const getBookMetadataBatch = async (ids: string[], user_id: string): Promise<BookMetadata[]> => {
-  await Promise.all(ids.map(id => updateLastAccessed(id, user_id)));
-  
+const getBookMetadataBatch = async (ids: string[]): Promise<BookMetadata[]> => {
   const { data, error } = await supabaseClient
     .from(DatabaseTableNames['BOOK_METADATA'])
     .select("*")
@@ -66,7 +80,7 @@ const getBookMetadataBatch = async (ids: string[], user_id: string): Promise<Boo
   }
 
   if (!data) return [];
-
+  
   return data.map(item => ({
     id: item.id,
     title: item.title,
@@ -80,7 +94,9 @@ const getBookMetadataBatch = async (ids: string[], user_id: string): Promise<Boo
   }));
 };
 
-
-export { insertBookMetadata, getBookMetadata, getBookMetadataBatch }
-
-
+export { 
+  insertBookMetadata, 
+  getBookMetadata, 
+  getBookMetadataBatch,
+  updateFetchedAt 
+}

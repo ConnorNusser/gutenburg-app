@@ -1,7 +1,7 @@
 import { BookMetadata, BookContent } from '@/types/book';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { getMostRecentBooks } from '@/db/bookAccess';
-import { getBookMetadata, getBookMetadataBatch } from '@/db/bookMetadata';
+import { getBookMetadata, getBookMetadataBatch, updateFetchedAt } from '@/db/bookMetadata';
 import { getBookContent } from '@/db/bookContent';
 import { getUserCredentials } from '@/utils/userCredentials';
 
@@ -118,11 +118,11 @@ const useBookData = (bookId: string, initialData?: BookMetadata) => {
             setIsLoading(false);
             return;
         }
-
         const cachedData = cache.getMetadata(bookId);
         if (cachedData) {
             setBookData(cachedData);
             setIsLoading(false);
+            updateFetchedAt(bookId);
             return;
         }
 
@@ -247,7 +247,6 @@ const useRecentBooks = (bookData: BookMetadata | null) => {
             const sortedBooks = books.sort((a, b) => 
               new Date(b.fetched_at).getTime() - new Date(a.fetched_at).getTime()
             );
-            
             if (sortedBooks.length > 0) {
               setRecentBooks(sortedBooks);
             }

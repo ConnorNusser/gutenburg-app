@@ -1,6 +1,6 @@
 import { BookContent } from "@/types/book";
 import supabaseClient from "./client";
-import { updateLastAccessed } from "./bookAccess";
+import { insertBook, updateLastAccessed } from "./bookAccess";
 import { DatabaseTableNames } from "@/app/constants/const";
 
 const insertBookContent = async (book: BookContent) => {
@@ -20,7 +20,7 @@ const insertBookContent = async (book: BookContent) => {
 }
 
 const getBookContent = async (id: string, user_id: string): Promise<BookContent | null> => {
-    updateLastAccessed(id, user_id);
+    insertBook(id, user_id);
 
     const { data, error } = await supabaseClient
         .from(DatabaseTableNames['BOOK_CONTENTS'])
