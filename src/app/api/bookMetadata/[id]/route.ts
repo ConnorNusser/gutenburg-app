@@ -3,14 +3,15 @@ import { NextRequest } from 'next/server';
 import { getBookMetadata, insertBookMetadata } from '@/db/bookMetadata';
 import { insertBook } from '@/db/bookAccess';
 import { fetchBookMetadata, parseBookMetadata } from '../../apiFetch';
+import { RequestParams } from '@/types/api';
 
 export async function GET(
     request: NextRequest,
-    context: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const clientId = request.headers.get('x-client-id') ?? '';
-        const { id } = context.params;
+        const id = (await params).id;
 
         //validation check
         if (!/^\d+$/.test(id)) {

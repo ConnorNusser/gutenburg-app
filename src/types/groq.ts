@@ -7,7 +7,8 @@ interface SentimentScore {
     disgust: number;     
     anger: number;       
     fear: number;        
-    overall: number;     
+    overall: number;
+    [key: string]: number;      
 }
 
 interface SentimentResponse {

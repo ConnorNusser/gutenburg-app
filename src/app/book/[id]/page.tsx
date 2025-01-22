@@ -3,7 +3,8 @@ import BookContent from '@/components/book/book-content';
 import Header from '@/components/header';
 import SentimentDisplay from '@/components/sentimentDisplay';
 
-export default function Page({params} : {params: {id: string}}) {
+export default async function Page(props: {params: Promise<{id: string}>}) {
+  const params = await props.params;
   const { id } = params;
 
   return (

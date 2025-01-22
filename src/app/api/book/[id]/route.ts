@@ -1,6 +1,6 @@
 'use server'
 import { getContentUrl } from '@/utils/url';
-import { ErrorResponse } from '@/types/api';
+import { ErrorResponse, RequestParams } from '@/types/api';
 import { NextRequest } from 'next/server';
 import { getBookContent, insertBookContent } from '@/db/bookContent';
 import { insertBook } from '@/db/bookAccess';
@@ -9,11 +9,11 @@ import { fetchBookContent, parseBookContent } from '../../apiFetch';
 
 export async function GET(
     request: NextRequest,
-    context: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const clientId = request.headers.get('x-client-id') ?? '';
-        const id = context.params.id;
+        const id = (await params).id;
         
         if (!/^\d+$/.test(id)) {
             const error: ErrorResponse = {

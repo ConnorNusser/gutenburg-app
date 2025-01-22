@@ -8,3 +8,9 @@ export interface FetchResult {
   response: Response;
   error: string;
 }
+
+export type RequestParams = {
+  params: {
+      id: string;
+  }
+}

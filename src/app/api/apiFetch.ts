@@ -161,7 +161,7 @@ const analyzeSentiment = async (content: string): Promise<SentimentScore> => {
         anger: 0,
         fear: 0,
         surprise: 0,
-        overall: 0
+        overall: 0,
     };
 
     //  average scores

@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Heart, Flame, Scale } from 'lucide-react';
+import { SentimentResponse } from '@/types/groq';
 
 const SentimentDisplay = ({ bookId }: { bookId: string }) => {
-  const [sentimentData, setSentimentData] = useState(null);
+  const [sentimentData, setSentimentData] = useState<SentimentResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
