@@ -15,7 +15,7 @@ const insertBookContent = async (book: BookContent) => {
 
     if (upsertError) {
         console.error('Error upserting to Supabase:', upsertError);
-        throw upsertError;  // Added throw
+        throw upsertError; 
     }
 }
 

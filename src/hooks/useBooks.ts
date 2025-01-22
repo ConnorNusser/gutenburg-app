@@ -235,7 +235,7 @@ const useRecentBooks = (bookData: BookMetadata | null) => {
             }
             
             if (idsToFetch.length > 0) {
-              const fetchedBooks = await getBookMetadataBatch(idsToFetch, getUserCredentials());
+              const fetchedBooks = await getBookMetadataBatch(idsToFetch);
               
               fetchedBooks.forEach(book => {
                 cache.setMetadata(book.id, book);
