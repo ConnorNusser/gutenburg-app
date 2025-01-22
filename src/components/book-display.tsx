@@ -37,7 +37,7 @@ const BookDataDisplay = ({ bookId }: { bookId: string }) => {
 
     },
     {
-      label: 'Released',
+      label: 'Gutenburg Release',
       value: release_date,
     }
   ];
@@ -53,7 +53,7 @@ const BookDataDisplay = ({ bookId }: { bookId: string }) => {
         <p className="text-muted-foreground">{author}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 w-full max-w-[300px]">
+      <div className="grid grid-cols-2 gap-4 w-full max-w-[400px]">
         {metrics.map((metric, index) => {
           return (
             <div

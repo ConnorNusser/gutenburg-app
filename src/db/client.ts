@@ -1,10 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 
-console.log('ENV vars:', {
-  url: process.env.NEXT_PUBLIC_PROJECT_URL,
-  key: process.env.NEXT_PUBLIC_API_KEY
-});
-
 if (!process.env.NEXT_PUBLIC_PROJECT_URL) {
   throw new Error('Missing NEXT_PUBLIC_PROJECT_URL environment variable');
 }

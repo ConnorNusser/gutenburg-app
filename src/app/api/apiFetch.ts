@@ -78,8 +78,6 @@ const analyzeChunkWithModel = async (
     modelId: string
 ): Promise<SentimentScore> => {
     const groq = new Groq({ apiKey: process.env.GROG_API_KEY });
-    console.log(content);
-    console.log(modelId);
     const response = await groq.chat.completions.create({
         model: modelId,
         messages: [
@@ -132,7 +130,6 @@ const analyzeSentiment = async (content: string): Promise<SentimentScore> => {
         for (const chunk of modelChunks) {
             try {
                 const scores = await analyzeChunkWithModel(chunk, modelId);
-                console.log(scores, 'these are scores');
                 chunkScores.push(scores);
                 await new Promise(resolve => setTimeout(resolve, 2000));
             } catch (error) {

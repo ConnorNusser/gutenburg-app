@@ -8,7 +8,7 @@ import { useBookContent } from '@/hooks/useBooks';
 const BookViewer = ({ bookId} : { bookId: string}) => {
   const { content, isLoading: contentLoading } = useBookContent(bookId);
   const [currentPage, setCurrentPage] = useState(1);
-  const [wordsPerPage] = useState(300);
+  const [wordsPerPage] = useState(450);
   
   const formattedContent = useMemo(() => {
     if (!content?.content) return [];
