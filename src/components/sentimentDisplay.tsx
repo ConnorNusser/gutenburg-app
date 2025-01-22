@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Heart, Flame, Scale } from 'lucide-react';
 
 const SentimentDisplay = ({ bookId }: { bookId: string }) => {
-  const [sentimentData, setSentimentData] = useState<any>(null);
+  const [sentimentData, setSentimentData] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
