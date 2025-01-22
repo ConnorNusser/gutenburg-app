@@ -12,7 +12,7 @@ interface SentimentScore {
 
 interface SentimentResponse {
     id: string;
-    scores: SentimentScore;
+    overall: number;
     dominantEmotion: string;
     confidenceLevel: number;
     analyzedAt: Date;

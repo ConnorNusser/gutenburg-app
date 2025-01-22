@@ -46,7 +46,9 @@ const SentimentDisplay = ({ bookId }: { bookId: string }) => {
     return { category: 'Neutral', color: 'text-amber-400', bgColor: 'bg-amber-100', icon: Scale };
   };
 
-  const { category, color, bgColor, icon: Icon } = getSentimentInfo(sentimentData.scores.overall);
+  const overallScore = sentimentData.overall ?? 0;
+  const dominantEmotion = sentimentData.dominantEmotion || 'Unknown';
+  const { category, color, bgColor, icon: Icon } = getSentimentInfo(overallScore);
 
   return (
     <div className="h-full flex flex-col items-center justify-center p-6 space-y-6">
@@ -58,7 +60,7 @@ const SentimentDisplay = ({ bookId }: { bookId: string }) => {
         <div className='text-muted-foreground'>Overall Sentiment</div>
         <div className='flex items-center justify-center gap-2'>
             <span className={`text-2xl font-medium ${color}`}>
-            {sentimentData.scores.overall.toFixed(1)}
+            {overallScore.toFixed(1) ?? 0}
             </span>
             <span className='text-sm text-muted-foreground opacity-75'>
             (-100 to 100)
@@ -70,7 +72,7 @@ const SentimentDisplay = ({ bookId }: { bookId: string }) => {
           {category}
         </div>
         <div className="text-sm text-muted-foreground capitalize">
-          Domain Emotion: {sentimentData.dominantEmotion}
+          Domain Emotion: {dominantEmotion}
         </div>
       </div>
       
@@ -79,7 +81,7 @@ const SentimentDisplay = ({ bookId }: { bookId: string }) => {
           <div 
             className={`h-full rounded-full transition-all duration-500 ${bgColor}`}
             style={{
-              width: `${Math.min(100, Math.max(0, (sentimentData.scores.overall + 100) / 2))}%`
+              width: `${Math.min(100, Math.max(0, (overallScore + 100) / 2))}%`
             }}
           />
         </div>

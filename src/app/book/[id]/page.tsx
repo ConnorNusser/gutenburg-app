@@ -1,3 +1,4 @@
+import BookDataDisplay from '@/components/book-display';
 import BookContent from '@/components/book/book-content';
 import Header from '@/components/header';
 import SentimentDisplay from '@/components/sentimentDisplay';
@@ -12,6 +13,7 @@ export default function Page({params} : {params: {id: string}}) {
         <main className="flex-1 w-full">
           <div className="p-4">
             <div className="grid gap-4 md:grid-cols-2">
+                {id && <BookDataDisplay bookId={id}/>}
                 {id && <SentimentDisplay bookId={id} />}
             </div>
             {id && <BookContent bookId={id} />}

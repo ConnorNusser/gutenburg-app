@@ -1,7 +1,7 @@
 import { BookMetadata, BookContent } from '@/types/book';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { getMostRecentBooks } from '@/db/bookAccess';
-import { getBookMetadata } from '@/db/bookMetadata';
+import { getBookMetadata, getBookMetadataBatch } from '@/db/bookMetadata';
 import { getBookContent } from '@/db/bookContent';
 import { getUserCredentials } from '@/utils/user_credentials';
 
@@ -220,34 +220,46 @@ const useRecentBooks = (bookData: BookMetadata | null) => {
 
     useEffect(() => {
         const loadInitialBooks = async () => {
-            setIsLoading(true);
-            try {
-                const recentIds = await getMostRecentBooks(10, getUserCredentials());
-                const books: BookMetadata[] = [];
-                
-                for (const id of recentIds) {
-                    const cachedData = cache.getMetadata(id);
-                    if (cachedData) {
-                        books.push(cachedData);
-                    } else {
-                        const data = await getBookMetadata(id, getUserCredentials());
-                        books.push(data);
-                        cache.setMetadata(id, data)
-                    }
-                }
-                
-                if (books.length > 0) {
-                    setRecentBooks(books);
-                }
-            } catch (error) {
-                console.error('Error loading initial recent books:', error);
-            } finally {
-                setIsLoading(false);
+          setIsLoading(true);
+          try {
+            const recentIds = await getMostRecentBooks(10, getUserCredentials());
+            const books: BookMetadata[] = [];
+            const idsToFetch: string[] = [];
+            for (const id of recentIds) {
+              const cachedData = cache.getMetadata(id);
+              if (cachedData) {
+                books.push(cachedData);
+              } else {
+                idsToFetch.push(id);
+              }
             }
+            
+            if (idsToFetch.length > 0) {
+              const fetchedBooks = await getBookMetadataBatch(idsToFetch, getUserCredentials());
+              
+              fetchedBooks.forEach(book => {
+                cache.setMetadata(book.id, book);
+                books.push(book);
+              });
+            }
+            
+            // sort by fetched
+            const sortedBooks = books.sort((a, b) => 
+              new Date(b.fetched_at).getTime() - new Date(a.fetched_at).getTime()
+            );
+            
+            if (sortedBooks.length > 0) {
+              setRecentBooks(sortedBooks);
+            }
+          } catch (error) {
+            console.error('Error loading initial recent books:', error);
+          } finally {
+            setIsLoading(false);
+          }
         };
-
+      
         loadInitialBooks();
-    }, [cache]);
+      }, [cache]);
 
     return { recentBooks, isLoading };
 };

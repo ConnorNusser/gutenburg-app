@@ -36,14 +36,15 @@ export async function GET(
 
         if (existingAnalysis && 
             new Date(existingAnalysis.analyzed_at).getTime() > Date.now() - 24 * 60 * 60 * 1000) {
+            const SentimentResp: SentimentResponse = {
+                id,
+                overall: existingAnalysis.overall_score,
+                dominantEmotion: existingAnalysis.dominant_emotion,
+                confidenceLevel: existingAnalysis.confidence_level,
+                analyzedAt: existingAnalysis.analyzed_at
+            }
             return new Response(
-                JSON.stringify({
-                    id,
-                    scores: existingAnalysis.scores,
-                    dominantEmotion: existingAnalysis.dominant_emotion,
-                    confidenceLevel: existingAnalysis.confidence_level,
-                    analyzedAt: existingAnalysis.analyzed_at
-                }),
+                JSON.stringify(SentimentResp),
                 { status: 200 }
             );
         }
@@ -89,7 +90,7 @@ export async function GET(
 
         const sentimentResponse: SentimentResponse = {
             id,
-            scores,
+            overall: scores.overall,
             dominantEmotion,
             confidenceLevel,
             analyzedAt: new Date()

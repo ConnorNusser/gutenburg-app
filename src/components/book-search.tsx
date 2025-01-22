@@ -72,7 +72,9 @@ const BookSearch = () => {
                                     <Loader2 className="h-8 w-8 animate-spin" />
                                 </div>
                             ) : bookData ? (
-                                <div className="space-y-4">
+                                <div className="space-y-4 cursor-pointer transition-transform transform hover:scale-105 p-4 rounded-lg" onClick={() => {
+                                    router.push(`/book/${bookData.id}`)
+                                }}>
                                     <h2 className="text-xl font-semibold">{bookData.title}</h2>
                                     <p>Author: {bookData.author}</p>
                                     <p>Language: {bookData.language}</p>

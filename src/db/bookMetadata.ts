@@ -52,6 +52,35 @@ const getBookMetadata = async (id: string, user_id: string): Promise<BookMetadat
   };
 };
 
-export { insertBookMetadata, getBookMetadata }
+const getBookMetadataBatch = async (ids: string[], user_id: string): Promise<BookMetadata[]> => {
+  await Promise.all(ids.map(id => updateLastAccessed(id, user_id)));
+  
+  const { data, error } = await supabaseClient
+    .from(DatabaseTableNames['BOOK_METADATA'])
+    .select("*")
+    .in("id", ids);
+
+  if (error) {
+    console.error("Error fetching book metadata batch:", error);
+    return [];
+  }
+
+  if (!data) return [];
+
+  return data.map(item => ({
+    id: item.id,
+    title: item.title,
+    author: item.author,
+    release_date: item.release_date,
+    metadata_url: item.metadata_url,
+    language: item.language,
+    fetched_at: item.fetched_at,
+    interaction_count: item.interaction_count,
+    summary: item.summary,
+  }));
+};
+
+
+export { insertBookMetadata, getBookMetadata, getBookMetadataBatch }
 
 
